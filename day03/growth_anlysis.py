@@ -21,7 +21,7 @@ def calculate_average_growth_rate(csv_filepath):
     return avg_growth_rate
 
 def main():
-    csv_file = r"C:\Users\sapir\Documents\python course\assigment3\data.csv"
+    csv_file = r"C:\Users\sapir\Documents\python course\Assignments\day03\data.csv"
     rate = calculate_average_growth_rate(csv_file)
     
     print(f"Average growth rate: {rate:.3f} OD/hour")
