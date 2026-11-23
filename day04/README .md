@@ -21,6 +21,26 @@ This project is part of the Python course assignments. It takes the previous gro
    - Added dynamic display sections to show the calculated results (Average Growth Rate and Max Yield).
    - Embedded the generated growth curve graph directly onto the results page.
 
+4. **Added Business Logic Unit Tests (`test_growth_anlysis.py`):**
+   - Wrote automated unit tests using `pytest` for the `analyze_and_plot` function.
+   - Verified accurate calculations for average growth rate and max yield (including cases where peak OD600 occurs mid-experiment before a decline phase), as well as plot image creation.
+   - Added edge-case tests to ensure proper error handling for empty CSV files (`IndexError`), zero time differences (`ZeroDivisionError`), and missing or invalid column headers (`KeyError`).
+
+---
+
+## Running the Tests
+
+1. Make sure `pytest` is installed in your environment:
+   ```bash
+   pip install pytest
+   ```
+
+2. Navigate to the `day04` directory and run the test suite:
+   ```bash
+   cd day04
+   pytest -v
+   ```
+
 ---
 
 ## Project Structure
@@ -30,6 +50,9 @@ day04/
 │
 ├── app.py                  # Flask web application backend
 ├── growth_anlysis.py       # Core business logic (analysis & plotting)
+├── test_growth_anlysis.py  # Unit tests for the business logic
+├── README.md               # Project documentation
 ├── templates/
 │   └── index.html          # HTML web interface
 └── static/                 # Generated static assets (growth curve images)
+```
