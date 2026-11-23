@@ -4,7 +4,7 @@ from growth_anlysis import analyze_and_plot
 
 app = Flask(__name__)
 
-# תיקיות להעלאות קבצים ולתמונות סטטיות
+# folders for uploaded files and static files
 UPLOAD_FOLDER = 'uploads'
 STATIC_FOLDER = 'static'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -34,11 +34,11 @@ def index():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)
             
-            # נתיב שבו נשמור את התמונה שנוצרת
+            # path for the output graph image
             graph_path = os.path.join(STATIC_FOLDER, 'growth_curve.png')
             
             try:
-                # הפעלת הלוגיקה המעודכנת
+                # analyze the CSV file and generate the growth curve plot
                 rate, max_yield = analyze_and_plot(filepath, graph_path)
                 # נתיב יחסי להצגה ב-HTML
                 graph_url = '/static/growth_curve.png'

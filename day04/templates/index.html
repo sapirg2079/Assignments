@@ -2,47 +2,235 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growth Rate Calculator</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9; color: #333; }
-        .container { max-width: 600px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #2c3e50; }
-        input[type="file"] { margin: 20px 0; }
-        button { background-color: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #2980b9; }
-        .result { margin-top: 20px; padding: 15px; background-color: #e8f8f5; border-left: 5px solid #2ecc71; }
-        .error { margin-top: 20px; padding: 15px; background-color: #fdedec; border-left: 5px solid #e74c3c; color: #c0392b; }
-        .graph-container { margin-top: 20px; text-align: center; }
-        .graph-container img { max-width: 100%; border-radius: 6px; border: 1px solid #ddd; }
+        :root {
+            --bg: #f4f7fb;
+            --panel: rgba(255, 255, 255, 0.96);
+            --panel-border: #dfe8f3;
+            --text: #172033;
+            --muted: #5b6b82;
+            --primary: #1d4ed8;
+            --primary-dark: #163bb8;
+            --primary-soft: #eaf1ff;
+            --success: #0f8f65;
+            --success-soft: #e9f9f2;
+            --danger: #d92d20;
+            --danger-soft: #fff1f1;
+            --shadow: rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #edf4ff 0%, #f8fafc 40%, #eefaf7 100%);
+            color: var(--text);
+            padding: 32px 18px;
+        }
+
+        .container {
+            width: min(760px, 100%);
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 22px;
+            box-shadow: 0 14px 40px var(--shadow);
+            padding: 32px 28px;
+            backdrop-filter: blur(8px);
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 18px 0 10px;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            line-height: 1.2;
+            letter-spacing: -0.04em;
+        }
+
+        .subtitle {
+            margin: 0 0 28px;
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        form {
+            background: #f8fafc;
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            padding: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            color: var(--text);
+        }
+
+        button {
+            appearance: none;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 10px 24px rgba(29, 78, 216, 0.25);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .result,
+        .error,
+        .graph-container {
+            margin-top: 26px;
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .result {
+            background: var(--success-soft);
+            border-left: 5px solid var(--success);
+        }
+
+        .error {
+            background: var(--danger-soft);
+            border-left: 5px solid var(--danger);
+            color: #7a1f1f;
+        }
+
+        .result h2,
+        .error h2,
+        .graph-container h2 {
+            margin: 0 0 16px;
+            font-size: 1.2rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(15, 143, 101, 0.15);
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
+
+        .metric-label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .graph-container {
+            background: #f9fbff;
+            text-align: center;
+        }
+
+        .graph-container img {
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+            border-radius: 12px;
+            border: 1px solid #dfe8f3;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px 18px;
+            }
+
+            form,
+            .result,
+            .error,
+            .graph-container {
+                padding: 18px 16px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Bacterial Growth Rate & Yield Calculator</h2>
+        <span class="eyebrow">Laboratory Analytics</span>
+        <h1>Bacterial Growth Analysis</h1>
+        <p class="subtitle">Upload a CSV file to calculate average growth rate and monitor biomass yield over time.</p>
+
         <form method="POST" enctype="multipart/form-data">
-            <label for="file">Upload Growth Data (CSV):</label><br>
-            <input type="file" name="file" accept=".csv" required><br>
+            <label for="file">Growth Data (CSV)</label>
+            <input type="file" name="file" accept=".csv" required>
             <button type="submit">Analyze Growth</button>
         </form>
 
         {% if rate is not none %}
             <div class="result">
-                <h3>Results:</h3>
-                <p>Average Growth Rate: <strong>{{ "%.3f"|format(rate) }} OD/hour</strong></p>
-                <p>Max Yield (Peak OD): <strong>{{ "%.3f"|format(max_yield) }} OD</strong></p>
+                <h2>Analysis Results</h2>
+                <div class="results-grid">
+                    <div class="metric">
+                        <span class="metric-label">Average Growth Rate</span>
+                        <span class="metric-value">{{ "%.3f"|format(rate) }} OD/hr</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Max Yield</span>
+                        <span class="metric-value">{{ "%.3f"|format(max_yield) }} OD</span>
+                    </div>
+                </div>
             </div>
         {% endif %}
 
         {% if graph_url %}
             <div class="graph-container">
-                <h3>Growth Curve:</h3>
+                <h2>Growth Curve</h2>
                 <img src="{{ graph_url }}?v={{ range(1, 1000) | random }}" alt="Growth Curve">
             </div>
         {% endif %}
 
         {% if error %}
             <div class="error">
-                <h3>Error:</h3>
+                <h2>Upload Error</h2>
                 <p>{{ error }}</p>
             </div>
         {% endif %}
